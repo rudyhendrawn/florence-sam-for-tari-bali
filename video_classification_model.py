@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import device_manager
 import pytorch_lightning as pl
 
 from pytorch_lightning import Trainer
@@ -9,9 +10,9 @@ from feature_extractor import FeatureExtractor
 from multimodal_feature_fusion import MultimodalFeatureFusion
 
 class VideoClassificationModel(pl.LightningModule):
-	def __init__(self, num_classes):
+	def __init__(self, num_classes, device_manager):
 		super(VideoClassificationModel, self).__init__()
-		self.device_ = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+		self.device_ = device_manager.get_device()
 		self.feature_extractor = FeatureExtractor(device=self.device_)
 		self.language_model = LanguageModel(device=self.device_)
 		visual_dim = 1024 # Based on Florence-2's encoder output size

@@ -1,9 +1,12 @@
-from transfomers import AutoProcessor, AutoModelForCausalLM
+import torch
+import torch.nn as nn
+import device_manager
+from transformers import AutoProcessor, AutoModelForCausalLM
 
 class FeatureExtractor(nn.Module):
-	def __init__(self, device):
+	def __init__(self, device_manager):
 		super(FeatureExtractor, self).__init__()
-		# Use a pre-trained Florence-2 model for feature extraction
+		self.device = device_manager.get_device()
 		self.model = AutoModelForCausalLM.from_pretrained(
 			"microsoft/Florence-2-base", 
 			torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
